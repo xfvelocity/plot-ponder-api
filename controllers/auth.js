@@ -7,29 +7,29 @@ const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
 
     if (!name) {
-      return res.json({
-        error: "Name is required",
-      });
+      return res.status(500).send("Name is required");
     }
 
     if (!password || password.length < 6) {
-      return res.json({
-        error: "Password should be at least 6 characters long",
-      });
+      return res
+        .status(500)
+        .send("Password should be at least 6 characters long");
     }
 
     const emailExists = await User.findOne({ email });
 
     if (emailExists) {
-      return res.json({
-        error: "Email is already taken",
-      });
+      return res.status(500).send("Email is already taken");
     }
 
     const hashedPassword = await hashPassword(password);
     const user = await User.create({ name, email, password: hashedPassword });
 
-    return res.json({ user });
+    return res.status(200).send({
+      name: user.name,
+      email: user.email,
+      uuid: user._id,
+    });
   } catch (e) {
     console.log(e);
   }
@@ -43,19 +43,19 @@ const loginUser = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.json({
-        error: "No user found",
-      });
+      return res.status(500).send("No user found");
     }
 
     const passwordMatch = await comparePassword(password, user.password);
 
     if (passwordMatch) {
-      res.json("Logged in");
-    } else {
-      return res.json({
-        error: "Invalid credentials",
+      res.status(200).send({
+        name: user.name,
+        email: user.email,
+        uuid: user._id,
       });
+    } else {
+      return res.status(500).send("Invalid credentials");
     }
   } catch (e) {
     console.log(e);

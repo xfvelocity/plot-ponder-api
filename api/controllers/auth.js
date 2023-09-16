@@ -25,11 +25,13 @@ const registerUser = async (req, res) => {
 
     const hashedPassword = await hashPassword(password);
     const user = await User.create({ name, email, password: hashedPassword });
+    const accessToken = jwt.sign(user.toJSON(), process.env.JWT_SECRET);
 
     return res.status(200).send({
       name: user.name,
       email: user.email,
       uuid: user._id,
+      accessToken,
     });
   } catch (e) {
     console.log(e);

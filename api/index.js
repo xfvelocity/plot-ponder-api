@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
+const { authenticateToken } = require("./helpers/auth");
 require("dotenv/config");
 
 mongoose
@@ -18,6 +19,14 @@ app.use(
     origin: ["http://localhost:5173"],
   })
 );
+
+app.use((req, res, next) => {
+  if (["/api/login", "/api/register"].includes(req.originalUrl)) {
+    return next();
+  } else {
+    return authenticateToken(req, res, next);
+  }
+});
 
 app.get("/api", (req, res) => {
   res.setHeader("Content-Type", "text/html");

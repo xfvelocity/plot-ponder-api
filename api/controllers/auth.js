@@ -1,4 +1,5 @@
 const { hashPassword, comparePassword } = require("../helpers/auth");
+const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
 // ** Register **
@@ -49,10 +50,13 @@ const loginUser = async (req, res) => {
     const passwordMatch = await comparePassword(password, user.password);
 
     if (passwordMatch) {
+      const accessToken = jwt.sign(user.toJSON(), process.env.JWT_SECRET);
+
       res.status(200).send({
         name: user.name,
         email: user.email,
         uuid: user._id,
+        accessToken,
       });
     } else {
       return res.status(500).send("Invalid credentials");

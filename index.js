@@ -19,6 +19,9 @@ app.use(
   })
 );
 
+app.get("/", (req, res) => {
+  res.send("Plot Ponder API");
+});
 app.use("/auth", require("./routes/auth"));
 
 const PORT = process.env.PORT || 8000;

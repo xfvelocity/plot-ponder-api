@@ -1,4 +1,5 @@
 const { hashPassword, comparePassword } = require("../helpers/auth");
+const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
@@ -24,17 +25,23 @@ const registerUser = async (req, res) => {
     }
 
     const hashedPassword = await hashPassword(password);
-    const user = await User.create({ name, email, password: hashedPassword });
+    const user = await User.create({
+      uuid: uuidv4(),
+      name,
+      email,
+      password: hashedPassword,
+    });
+
     const accessToken = jwt.sign(user.toJSON(), process.env.JWT_SECRET);
 
     return res.status(200).send({
       name: user.name,
       email: user.email,
-      uuid: user._id,
+      uuid: user.uuid,
       accessToken,
     });
   } catch (e) {
-    console.log(e);
+    res.status(500).send(e);
   }
 };
 
@@ -57,14 +64,14 @@ const loginUser = async (req, res) => {
       res.status(200).send({
         name: user.name,
         email: user.email,
-        uuid: user._id,
+        uuid: user.uuid,
         accessToken,
       });
     } else {
       return res.status(500).send("Invalid credentials");
     }
   } catch (e) {
-    console.log(e);
+    res.status(500).send(e);
   }
 };
 

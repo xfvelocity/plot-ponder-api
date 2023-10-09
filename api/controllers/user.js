@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Review = require("../models/review");
 
 const searchUser = async (req, res) => {
   const searchTerm = req.query.q;
@@ -31,6 +32,7 @@ const userProfile = async (req, res) => {
       res.status(500).send("User not found");
     } else {
       return {
+        uuid: user.uuid,
         username: user.username,
         name: user.name,
       };
@@ -40,7 +42,16 @@ const userProfile = async (req, res) => {
   res.send(user);
 };
 
+const userReviews = async (req, res) => {
+  const uuid = req.params.uuid || req.user.uuid;
+
+  const reviews = await Review.find({ userUuid: uuid });
+
+  res.send(reviews);
+};
+
 module.exports = {
   searchUser,
   userProfile,
+  userReviews,
 };

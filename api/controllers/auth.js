@@ -6,10 +6,22 @@ const User = require("../models/user");
 // ** Register **
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, username } = req.body;
 
     if (!name) {
       return res.status(500).send("Name is required");
+    }
+
+    if (!username) {
+      return res.status(500).send("Username is required");
+    } else {
+      const matchingUser = await User.findOne({ username });
+
+      console.log(matchingUser);
+
+      if (matchingUser) {
+        return res.status(500).send("Username is taken");
+      }
     }
 
     if (!password || password.length < 6) {
@@ -18,16 +30,21 @@ const registerUser = async (req, res) => {
         .send("Password should be at least 6 characters long");
     }
 
-    const emailExists = await User.findOne({ email });
+    if (!email) {
+      return res.status(500).send("Email is required");
+    } else {
+      const emailExists = await User.findOne({ email });
 
-    if (emailExists) {
-      return res.status(500).send("Email is already taken");
+      if (emailExists) {
+        return res.status(500).send("Email is already taken");
+      }
     }
 
     const hashedPassword = await hashPassword(password);
     const user = await User.create({
       uuid: uuidv4(),
       name,
+      username,
       email,
       password: hashedPassword,
     });
@@ -36,6 +53,7 @@ const registerUser = async (req, res) => {
 
     return res.status(200).send({
       name: user.name,
+      username: user.username,
       email: user.email,
       uuid: user.uuid,
       accessToken,
@@ -64,6 +82,7 @@ const loginUser = async (req, res) => {
       res.status(200).send({
         name: user.name,
         email: user.email,
+        username: user.username,
         uuid: user.uuid,
         accessToken,
       });

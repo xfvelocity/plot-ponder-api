@@ -7,12 +7,12 @@ const searchUser = async (req, res) => {
     res.status(500).send("Search query must be at least 2 characters long");
   } else {
     const user = await User.find({
-      name: {
+      username: {
         $regex: new RegExp(searchTerm, "ig"),
       },
     }).then((r) =>
       r.map((x) => ({
-        uuid: x.uuid,
+        username: user.username,
         name: x.name,
       }))
     );
@@ -31,7 +31,7 @@ const userProfile = async (req, res) => {
       res.status(500).send("User not found");
     } else {
       return {
-        uuid: user.uuid,
+        username: user.username,
         name: user.name,
       };
     }

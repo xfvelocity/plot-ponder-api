@@ -22,10 +22,10 @@ const searchUser = async (req, res) => {
 };
 
 const userProfile = async (req, res) => {
-  const uuid = req.params.uuid || req.user.uuid;
+  const username = req.params.username || req.user.username;
 
   const user = await User.findOne({
-    uuid,
+    username,
   }).then((user) => {
     if (!user) {
       res.status(500).send("User not found");

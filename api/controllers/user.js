@@ -5,7 +5,9 @@ const searchUser = async (req, res) => {
   const searchTerm = req.query.q;
 
   if (searchTerm.length < 2) {
-    res.status(500).send("Search query must be at least 2 characters long");
+    res
+      .status(500)
+      .send({ message: "Search query must be at least 2 characters long" });
   } else {
     const user = await User.find({
       username: {
@@ -30,7 +32,7 @@ const userProfile = async (req, res) => {
     username,
   }).then((user) => {
     if (!user) {
-      res.status(500).send("User not found");
+      res.status(500).send({ message: "User not found" });
     } else {
       return {
         uuid: user.uuid,

@@ -9,34 +9,34 @@ const registerUser = async (req, res) => {
     const { name, email, password, username } = req.body;
 
     if (!name) {
-      return res.status(500).send("Name is required");
+      return res.status(500).send({ message: "Name is required" });
     }
 
     if (!username) {
-      return res.status(500).send("Username is required");
+      return res.status(500).send({ message: "Username is required" });
     } else {
       const matchingUser = await User.findOne({ username });
 
       console.log(matchingUser);
 
       if (matchingUser) {
-        return res.status(500).send("Username is taken");
+        return res.status(500).send({ message: "Username is taken" });
       }
     }
 
     if (!password || password.length < 6) {
       return res
         .status(500)
-        .send("Password should be at least 6 characters long");
+        .send({ message: "Password should be at least 6 characters long" });
     }
 
     if (!email) {
-      return res.status(500).send("Email is required");
+      return res.status(500).send({ message: "Email is required" });
     } else {
       const emailExists = await User.findOne({ email });
 
       if (emailExists) {
-        return res.status(500).send("Email is already taken");
+        return res.status(500).send({ message: "Email is already taken" });
       }
     }
 
@@ -73,7 +73,7 @@ const loginUser = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(500).send("No user found");
+      return res.status(500).send({ message: "No user found" });
     }
 
     const passwordMatch = await comparePassword(password, user.password);
@@ -90,7 +90,7 @@ const loginUser = async (req, res) => {
         accessToken,
       });
     } else {
-      return res.status(500).send("Invalid credentials");
+      return res.status(500).send({ message: "Invalid credentials" });
     }
   } catch (e) {
     res.status(500).send(e);

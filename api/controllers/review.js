@@ -3,7 +3,7 @@ const User = require("../models/user");
 
 const postReview = async (req, res) => {
   try {
-    const user = await User.find({ uuid: req.user.uuid });
+    const user = await User.findOne({ uuid: req.user.uuid });
 
     const { uuid, name, username, avatar } = user;
 

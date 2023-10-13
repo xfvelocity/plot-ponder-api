@@ -8,11 +8,18 @@ const filmSchema = new Schema({
   image: String,
 });
 
+const userSchema = new Schema({
+  uuid: String,
+  name: String,
+  avatar: String,
+  username: String,
+});
+
 const reviewSchema = new Schema({
   film: filmSchema,
   rating: Number,
   comments: String,
-  userUuid: String,
+  user: userSchema,
   location: String,
   date: Date,
 });

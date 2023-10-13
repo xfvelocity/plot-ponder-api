@@ -47,6 +47,7 @@ const registerUser = async (req, res) => {
       username,
       email,
       password: hashedPassword,
+      avatar: "",
     });
 
     const accessToken = jwt.sign(user.toJSON(), process.env.JWT_SECRET);
@@ -56,6 +57,7 @@ const registerUser = async (req, res) => {
       username: user.username,
       email: user.email,
       uuid: user.uuid,
+      avatar: user.avatar,
       accessToken,
     });
   } catch (e) {
@@ -84,6 +86,7 @@ const loginUser = async (req, res) => {
         email: user.email,
         username: user.username,
         uuid: user.uuid,
+        avatar: user.avatar,
         accessToken,
       });
     } else {

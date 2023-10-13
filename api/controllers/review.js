@@ -1,10 +1,20 @@
 const Review = require("../models/review");
+const User = require("../models/user");
 
 const postReview = async (req, res) => {
   try {
+    const user = await User.find({ uuid: req.user.uuid });
+
+    const { uuid, name, username, avatar } = user;
+
     const review = await Review.create({
       ...req.body,
-      userUuid: req.user.uuid,
+      user: {
+        uuid,
+        name,
+        username,
+        avatar,
+      },
     });
 
     return res.status(200).send(review);

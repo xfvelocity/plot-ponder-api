@@ -15,6 +15,7 @@ const searchUser = async (req, res) => {
       r.map((x) => ({
         username: user.username,
         name: x.name,
+        avatar: x.avatar,
       }))
     );
 
@@ -35,6 +36,7 @@ const userProfile = async (req, res) => {
         uuid: user.uuid,
         username: user.username,
         name: user.name,
+        avatar: x.avatar,
       };
     }
   });

@@ -38,7 +38,7 @@ const userProfile = async (req, res) => {
         uuid: user.uuid,
         username: user.username,
         name: user.name,
-        avatar: x.avatar,
+        avatar: user.avatar,
       };
     }
   });

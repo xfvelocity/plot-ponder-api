@@ -56,7 +56,9 @@ const userReviews = async (req, res) => {
 
   try {
     const total = await Review.countDocuments(query);
+
     const reviews = await Review.find(query)
+      .sort({ date: -1 })
       .skip((page - 1) * perPage)
       .limit(perPage);
 

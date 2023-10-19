@@ -21,6 +21,7 @@ const reviewSchema = new Schema({
   comments: String,
   user: userSchema,
   location: String,
+  createdAt: Date,
   date: Date,
 });
 

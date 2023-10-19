@@ -9,6 +9,7 @@ const postReview = async (req, res) => {
 
     const review = await Review.create({
       ...req.body,
+      createdAt: new Date(),
       user: {
         uuid,
         name,

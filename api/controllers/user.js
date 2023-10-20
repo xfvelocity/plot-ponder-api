@@ -9,41 +9,49 @@ const searchUser = async (req, res) => {
       .status(500)
       .send({ message: "Search query must be at least 2 characters long" });
   } else {
-    const user = await User.find({
-      username: {
-        $regex: new RegExp(searchTerm, "ig"),
-      },
-    }).then((r) =>
-      r.map((x) => ({
-        username: user.username,
-        name: x.name,
-        avatar: x.avatar,
-      }))
-    );
+    try {
+      const user = await User.find({
+        username: {
+          $regex: new RegExp(searchTerm, "ig"),
+        },
+      }).then((r) =>
+        r.map((x) => ({
+          username: user.username,
+          name: x.name,
+          avatar: x.avatar,
+        }))
+      );
 
-    res.send(user);
+      res.send(user);
+    } catch (error) {
+      res.status(500).json({ message: "Server Error", error });
+    }
   }
 };
 
 const userProfile = async (req, res) => {
   const username = req.params.username || req.user.username;
 
-  const user = await User.findOne({
-    username,
-  }).then((user) => {
-    if (!user) {
-      res.status(500).send({ message: "User not found" });
-    } else {
-      return {
-        uuid: user.uuid,
-        username: user.username,
-        name: user.name,
-        avatar: user.avatar,
-      };
-    }
-  });
+  try {
+    const user = await User.findOne({
+      username,
+    }).then((user) => {
+      if (!user) {
+        res.status(500).send({ message: "User not found" });
+      } else {
+        return {
+          uuid: user.uuid,
+          username: user.username,
+          name: user.name,
+          avatar: user.avatar,
+        };
+      }
+    });
 
-  res.send(user);
+    res.send(user);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error });
+  }
 };
 
 const userReviews = async (req, res) => {

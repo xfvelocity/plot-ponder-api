@@ -19,8 +19,8 @@ const postReview = async (req, res) => {
     });
 
     return res.status(200).send(review);
-  } catch (e) {
-    res.status(500).send(e);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error });
   }
 };
 

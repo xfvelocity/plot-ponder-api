@@ -60,8 +60,8 @@ const registerUser = async (req, res) => {
       avatar: user.avatar,
       accessToken,
     });
-  } catch (e) {
-    res.status(500).send(e);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error });
   }
 };
 
@@ -92,8 +92,8 @@ const loginUser = async (req, res) => {
     } else {
       return res.status(500).send({ message: "Invalid credentials" });
     }
-  } catch (e) {
-    res.status(500).send(e);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error });
   }
 };
 

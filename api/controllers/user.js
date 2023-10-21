@@ -1,5 +1,5 @@
 const User = require("../models/user");
-const Review = require("../models/review");
+const { getReviewData } = require("../helpers/review");
 
 const searchUser = async (req, res) => {
   const searchTerm = req.query.q;
@@ -56,28 +56,10 @@ const userProfile = async (req, res) => {
 
 const userReviews = async (req, res) => {
   const uuid = req.params.uuid || req.user.uuid;
-  const page = parseInt(req.query.page || "") || 1;
-  const perPage = parseInt(req.query.perPage || "") || 10;
-  const query = {
-    "user.uuid": uuid,
-  };
 
   try {
-    const total = await Review.countDocuments(query);
-
-    const reviews = await Review.find(query)
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * perPage)
-      .limit(perPage);
-
-    res.json({
-      data: reviews,
-      meta: {
-        page,
-        perPage,
-        totalPages: Math.ceil(total / perPage),
-        total,
-      },
+    await getReviewData(req, res, {
+      userUuid: uuid,
     });
   } catch (error) {
     res.status(500).json({ message: "Server Error", error });

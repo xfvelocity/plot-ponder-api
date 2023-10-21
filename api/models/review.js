@@ -1,25 +1,11 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const filmSchema = new Schema({
-  name: String,
-  id: Number,
-  genres: [String],
-  image: String,
-});
-
-const userSchema = new Schema({
-  uuid: String,
-  name: String,
-  avatar: String,
-  username: String,
-});
-
 const reviewSchema = new Schema({
-  film: filmSchema,
+  filmId: Number,
   rating: Number,
   comments: String,
-  user: userSchema,
+  userUuid: String,
   location: String,
   createdAt: Date,
   date: Date,

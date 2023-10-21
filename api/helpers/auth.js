@@ -102,9 +102,6 @@ const getReviewData = async (req, res, query = {}, getUser = true) => {
 
 module.exports = {
   getReviewData,
-};
-
-module.exports = {
   hashPassword,
   comparePassword,
   authenticateToken,

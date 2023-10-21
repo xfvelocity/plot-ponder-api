@@ -58,9 +58,14 @@ const userReviews = async (req, res) => {
   const uuid = req.params.uuid || req.user.uuid;
 
   try {
-    await getReviewData(req, res, {
-      userUuid: uuid,
-    });
+    await getReviewData(
+      req,
+      res,
+      {
+        userUuid: uuid,
+      },
+      false
+    );
   } catch (error) {
     res.status(500).json({ message: "Server Error", error });
   }

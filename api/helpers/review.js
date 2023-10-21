@@ -2,7 +2,7 @@ const Review = require("../models/review");
 const User = require("../models/user");
 const axios = require("axios");
 
-const getReviewData = async (req, res, query = {}) => {
+const getReviewData = async (req, res, query = {}, getUser = true) => {
   const page = parseInt(req.query.page || "") || 1;
   const perPage = parseInt(req.query.perPage || "") || 10;
 
@@ -15,8 +15,8 @@ const getReviewData = async (req, res, query = {}) => {
 
   reviews = await Promise.all(
     reviews.map(async (review) => {
-      if (!query.userUuid) {
-        const user = await User.findOne({ uuid: userUuid });
+      if (getUser) {
+        const user = await User.findOne({ uuid: review.userUuid });
 
         review.user = {
           name: user.name,

@@ -42,6 +42,24 @@ const authenticateToken = (req, res, next) => {
   }
 };
 
+const authenticateClientToken = (req, res, next) => {
+  const token = req.header("Client-Auth");
+
+  if (!token) {
+    return res
+      .status(401)
+      .json({ message: "Access denied. Clien token missing." });
+  }
+
+  if (token === process.env.CLIENT_TOKEN) {
+    return { success: true };
+  } else {
+    return res
+      .status(403)
+      .json({ message: "Access denied. Invalid client token." });
+  }
+};
+
 const getReviewData = async (req, res, query = {}, getUser = true) => {
   const page = parseInt(req.query.page || "") || 1;
   const perPage = parseInt(req.query.perPage || "") || 10;
@@ -101,6 +119,7 @@ const getReviewData = async (req, res, query = {}, getUser = true) => {
 };
 
 module.exports = {
+  authenticateClientToken,
   getReviewData,
   hashPassword,
   comparePassword,

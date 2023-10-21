@@ -2,8 +2,12 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
-const { authenticateToken } = require("./helpers/generic");
 require("dotenv/config");
+
+const {
+  authenticateToken,
+  authenticateClientToken,
+} = require("./helpers/generic");
 
 mongoose
   .connect(process.env.DB_CONNECTION, {
@@ -20,11 +24,15 @@ app.use(
   })
 );
 
-app.use((req, res, next) => {
-  if (["/api/login", "/api/register"].includes(req.originalUrl)) {
-    return next();
-  } else {
-    return authenticateToken(req, res, next);
+app.use(async (req, res, next) => {
+  const clientToken = authenticateClientToken(req, res);
+
+  if (clientToken.success) {
+    if (["/api/login", "/api/register"].includes(req.originalUrl)) {
+      return next();
+    } else {
+      return authenticateToken(req, res, next);
+    }
   }
 });
 

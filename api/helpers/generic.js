@@ -51,7 +51,7 @@ const authenticateClientToken = (req, res, next) => {
       .json({ message: "Access denied. Clien token missing." });
   }
 
-  if (token === process.env.CLIENT_TOKEN) {
+  if (token == process.env.CLIENT_TOKEN) {
     return { success: true };
   } else {
     return res

@@ -1,4 +1,4 @@
-const { getReviewData } = require("../helpers/auth");
+const { getReviewData } = require("../helpers/generic");
 
 const getFeed = async (req, res) => {
   try {

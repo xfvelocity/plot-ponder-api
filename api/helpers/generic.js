@@ -1,8 +1,8 @@
 const bcrupt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const Review = require("../models/review");
-const User = require("../models/user");
 const axios = require("axios");
+
+const { Review, User } = require("../models/index");
 
 const hashPassword = (password) => {
   return new Promise((resolve, reject) => {

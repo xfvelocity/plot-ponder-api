@@ -1,7 +1,7 @@
-const { hashPassword, comparePassword } = require("../helpers/auth");
+const { hashPassword, comparePassword } = require("../helpers/generic");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
-const User = require("../models/user");
+const { User } = require("../models/index");
 
 // ** Register **
 const registerUser = async (req, res) => {

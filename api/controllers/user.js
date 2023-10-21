@@ -1,5 +1,5 @@
-const User = require("../models/user");
-const { getReviewData } = require("../helpers/auth");
+const { User } = require("../models/index");
+const { getReviewData } = require("../helpers/generic");
 
 const searchUser = async (req, res) => {
   const searchTerm = req.query.q;

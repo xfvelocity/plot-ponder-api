@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
-const { authenticateToken } = require("./helpers/auth");
+const { authenticateToken } = require("./helpers/generic");
 require("dotenv/config");
 
 mongoose
@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173", "https://plotponder.com"],
   })
 );
 
@@ -34,10 +34,7 @@ app.get("/api", (req, res) => {
   res.end(`Plot Ponder API`);
 });
 
-app.use("/api", require("./routes/auth"));
-app.use("/api", require("./routes/review"));
-app.use("/api", require("./routes/user"));
-app.use("/api", require("./routes/feed"));
+app.use("/api", require("./routes/index"));
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

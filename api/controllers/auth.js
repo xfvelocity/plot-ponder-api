@@ -17,28 +17,29 @@ const registerUser = async (req, res) => {
     } else {
       const matchingUser = await User.findOne({ username });
 
-      console.log(matchingUser);
-
       if (matchingUser) {
         return res.status(500).send({ message: "Username is taken" });
       }
     }
 
-    if (!password || password.length < 6) {
+    const passwordRegex = new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{6,}$");
+
+    if (passwordRegex.test(password)) {
       return res
         .status(500)
-        .send({ message: "Password should be at least 6 characters long" });
+        .send({ message: "Password must include 6 characters and 1 number" });
     }
 
-    if (!email) {
-      return res.status(500).send({ message: "Email is required" });
-    } else {
-      const emailExists = await User.findOne({ email });
+    if (password)
+      if (!email) {
+        return res.status(500).send({ message: "Email is required" });
+      } else {
+        const emailExists = await User.findOne({ email });
 
-      if (emailExists) {
-        return res.status(500).send({ message: "Email is already taken" });
+        if (emailExists) {
+          return res.status(500).send({ message: "Email is already taken" });
+        }
       }
-    }
 
     const hashedPassword = await hashPassword(password);
     const user = await User.create({
@@ -73,7 +74,7 @@ const loginUser = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(500).send({ message: "No user found" });
+      return res.status(500).send({ message: "Incorrect email or password" });
     }
 
     const passwordMatch = await comparePassword(password, user.password);
@@ -90,7 +91,7 @@ const loginUser = async (req, res) => {
         accessToken,
       });
     } else {
-      return res.status(500).send({ message: "Invalid credentials" });
+      return res.status(500).send({ message: "Incorrect email or password" });
     }
   } catch (error) {
     res.status(500).json({ message: "Server Error", error });

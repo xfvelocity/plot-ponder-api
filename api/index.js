@@ -9,6 +9,13 @@ const {
   authenticateClientToken,
 } = require("./helpers/generic");
 
+const rateLimit = require("express-rate-limit");
+
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 60,
+});
+
 mongoose
   .connect(process.env.DB_CONNECTION, {
     useNewUrlParser: true,
@@ -16,6 +23,7 @@ mongoose
   })
   .then(() => console.log("Connected to DB"));
 
+app.use(limiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(

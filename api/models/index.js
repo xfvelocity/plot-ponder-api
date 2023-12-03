@@ -21,13 +21,14 @@ const UserModel = mongoose.model("User", userSchema);
 
 // ** Review **
 const reviewSchema = new Schema({
-  filmId: Number,
+  contentId: Number,
   rating: Number,
   comments: String,
   userUuid: String,
   location: String,
   createdAt: Date,
   date: Date,
+  type: String,
 });
 
 const ReviewModel = mongoose.model("Review", reviewSchema);

@@ -83,8 +83,9 @@ const getReviewData = async (req, res, query = {}, getUser = true) => {
         };
       }
 
+      const type = review.type === "film" ? "movie" : "tv";
       const res = await axios.get(
-        `https://api.themoviedb.org/3/movie/${review.filmId}`,
+        `https://api.themoviedb.org/3/${type}/${review.contentId}`,
         {
           headers: {
             accept: "application/json",
@@ -95,7 +96,7 @@ const getReviewData = async (req, res, query = {}, getUser = true) => {
 
       const { title, genres, release_date, overview, poster_path } = res.data;
 
-      review.film = {
+      review.content = {
         name: title,
         genres: genres.map((x) => x.name),
         releaseDate: release_date,

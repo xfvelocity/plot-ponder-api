@@ -94,10 +94,11 @@ const getReviewData = async (req, res, query = {}, getUser = true) => {
         }
       );
 
-      const { title, genres, release_date, overview, poster_path } = res.data;
+      const { title, name, genres, release_date, overview, poster_path } =
+        res.data;
 
       review.content = {
-        name: title,
+        name: title || name,
         genres: genres.map((x) => x.name),
         releaseDate: release_date,
         overview,

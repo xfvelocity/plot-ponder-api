@@ -17,10 +17,7 @@ const limiter = rateLimit({
 });
 
 mongoose
-  .connect(process.env.DB_CONNECTION, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.DB_CONNECTION)
   .then(() => console.log("Connected to DB"));
 
 app.use(limiter);

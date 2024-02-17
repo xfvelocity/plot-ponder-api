@@ -25,8 +25,10 @@ router.get("/user-reviews", userReviews);
 router.get("/user-reviews/:uuid", userReviews);
 
 // ** Review **
-const { postReview } = require("../controllers/review");
+const { postReview, getContentReviews } = require("../controllers/review");
 
 router.post("/review", postReview);
+
+router.get("/content/:id/reviews", getContentReviews);
 
 module.exports = router;

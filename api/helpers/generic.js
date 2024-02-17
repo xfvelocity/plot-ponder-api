@@ -60,7 +60,13 @@ const authenticateClientToken = (req, res, next) => {
   }
 };
 
-const getReviewData = async (req, res, query = {}, getUser = true) => {
+const getReviewData = async (
+  req,
+  res,
+  query = {},
+  getUser = true,
+  getContent = true
+) => {
   const page = parseInt(req.query.page || "") || 1;
   const perPage = parseInt(req.query.perPage || "") || 10;
 
@@ -83,27 +89,29 @@ const getReviewData = async (req, res, query = {}, getUser = true) => {
         };
       }
 
-      const type = review.type === "film" ? "movie" : "tv";
-      const res = await axios.get(
-        `https://api.themoviedb.org/3/${type}/${review.contentId}`,
-        {
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
-          },
-        }
-      );
+      if (getContent) {
+        const type = review.type === "film" ? "movie" : "tv";
+        const res = await axios.get(
+          `https://api.themoviedb.org/3/${type}/${review.contentId}`,
+          {
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
+            },
+          }
+        );
 
-      const { title, name, genres, release_date, overview, poster_path } =
-        res.data;
+        const { title, name, genres, release_date, overview, poster_path } =
+          res.data;
 
-      review.content = {
-        name: title || name,
-        genres: genres.map((x) => x.name),
-        releaseDate: release_date,
-        overview,
-        image: `https://image.tmdb.org/t/p/original${poster_path}`,
-      };
+        review.content = {
+          name: title || name,
+          genres: genres.map((x) => x.name),
+          releaseDate: release_date,
+          overview,
+          image: `https://image.tmdb.org/t/p/original${poster_path}`,
+        };
+      }
 
       return review;
     })

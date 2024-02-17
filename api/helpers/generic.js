@@ -4,6 +4,7 @@ const axios = require("axios");
 
 const { Review, User } = require("../models/index");
 
+// ** Auth **
 const hashPassword = (password) => {
   return new Promise((resolve, reject) => {
     bcrupt.genSalt(12, (err, salt) => {
@@ -60,6 +61,7 @@ const authenticateClientToken = (req, res, next) => {
   }
 };
 
+// ** Reviews **
 const getReviewData = async (
   req,
   res,
@@ -67,18 +69,10 @@ const getReviewData = async (
   getUser = true,
   getContent = true
 ) => {
-  const page = parseInt(req.query.page || "") || 1;
-  const perPage = parseInt(req.query.perPage || "") || 10;
+  const reviews = await paginatedList(req, Review, query);
 
-  const total = await Review.countDocuments(query);
-  let reviews = await Review.find(query)
-    .sort({ createdAt: -1 })
-    .skip((page - 1) * perPage)
-    .limit(perPage)
-    .lean();
-
-  reviews = await Promise.all(
-    reviews.map(async (review) => {
+  reviews.data = await Promise.all(
+    reviews.data.map(async (review) => {
       if (getUser) {
         const user = await User.findOne({ uuid: review.userUuid });
 
@@ -117,18 +111,34 @@ const getReviewData = async (
     })
   );
 
-  res.json({
-    data: reviews,
+  res.json(reviews);
+};
+
+// ** Paginated list **
+const paginatedList = async (req, model, query) => {
+  const page = parseInt(req.query.page || "") || 1;
+  const perPage = parseInt(req.query.perPage || "") || 10;
+
+  const pageItems = await model
+    .find(query)
+    .skip((page - 1) * perPage)
+    .limit(perPage)
+    .lean();
+  const total = await model.countDocuments(query);
+
+  return {
+    data: pageItems,
     meta: {
       page,
       perPage,
       totalPages: Math.ceil(total / perPage),
       total,
     },
-  });
+  };
 };
 
 module.exports = {
+  paginatedList,
   authenticateClientToken,
   getReviewData,
   hashPassword,

@@ -1,5 +1,5 @@
 const { User } = require("../models/index");
-const { getReviewData } = require("../helpers/generic");
+const { getReviewData, paginatedList } = require("../helpers/generic");
 
 const searchUser = async (req, res) => {
   const searchTerm = req.query.q;
@@ -10,19 +10,22 @@ const searchUser = async (req, res) => {
       .send({ message: "Search query must be at least 2 characters long" });
   } else {
     try {
-      const user = await User.find({
+      const users = await paginatedList(req, User, {
         username: {
           $regex: new RegExp(searchTerm, "ig"),
         },
-      }).then((r) =>
-        r.map((x) => ({
-          username: user.username,
-          name: x.name,
-          avatar: x.avatar,
-        }))
-      );
+      }).then((r) => {
+        return {
+          data: r.data.map((x) => ({
+            username: x.username,
+            name: x.name,
+            avatar: x.avatar,
+          })),
+          meta: r.meta,
+        };
+      });
 
-      res.send(user);
+      res.send(users);
     } catch (error) {
       res.status(500).json({ message: "Server Error", error });
     }

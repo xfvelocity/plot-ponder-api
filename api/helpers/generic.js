@@ -69,7 +69,7 @@ const getReviewData = async (
   getUser = true,
   getContent = true
 ) => {
-  const reviews = await paginatedList(req, Review, query);
+  const reviews = await paginatedList(req, Review, query, { createdAt: -1 });
 
   reviews.data = await Promise.all(
     reviews.data.map(async (review) => {
@@ -115,12 +115,13 @@ const getReviewData = async (
 };
 
 // ** Paginated list **
-const paginatedList = async (req, model, query) => {
+const paginatedList = async (req, model, query, sortBy = {}) => {
   const page = parseInt(req.query.page || "") || 1;
   const perPage = parseInt(req.query.perPage || "") || 10;
 
   const pageItems = await model
     .find(query)
+    .sort(sortBy)
     .skip((page - 1) * perPage)
     .limit(perPage)
     .lean();

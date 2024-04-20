@@ -33,10 +33,18 @@ app.use(async (req, res, next) => {
   const clientToken = authenticateClientToken(req, res);
 
   if (clientToken.success) {
-    if (["/api/login", "/api/register"].includes(req.originalUrl)) {
-      return next();
-    } else {
+    if (
+      [
+        "/api/review",
+        "/api/user",
+        "/api/user-reviews",
+        "/api/register",
+        "/api/login",
+      ].includes(req.originalUrl)
+    ) {
       return authenticateToken(req, res, next);
+    } else {
+      return next();
     }
   }
 });

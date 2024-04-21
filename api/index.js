@@ -29,19 +29,19 @@ app.use(
   })
 );
 
+const publicUrls = [
+  "/api/review",
+  "/api/user",
+  "/api/user-reviews",
+  "/api/register",
+  "/api/login",
+];
+
 app.use(async (req, res, next) => {
   const clientToken = authenticateClientToken(req, res);
 
   if (clientToken.success) {
-    if (
-      [
-        "/api/review",
-        "/api/user",
-        "/api/user-reviews",
-        "/api/register",
-        "/api/login",
-      ].includes(req.originalUrl)
-    ) {
+    if (publicUrls.includes(req.originalUrl)) {
       return authenticateToken(req, res, next);
     } else {
       return next();

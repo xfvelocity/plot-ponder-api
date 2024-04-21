@@ -17,16 +17,15 @@ const postReview = async (req, res) => {
 
 const getContentReviews = async (req, res) => {
   try {
-    await getReviewData(
-      req,
-      res,
-      {
-        contentId: req.params.id,
-        userUuid: { $ne: req.user.uuid },
-      },
-      true,
-      false
-    );
+    const query = {
+      contentId: req.params.id,
+    };
+
+    if (req.user?.uuid) {
+      query.userUuid = { $ne: req.user.uuid };
+    }
+
+    await getReviewData(req, res, query, true, false);
   } catch (error) {
     res.status(500).json({ message: "Server Error", error });
   }

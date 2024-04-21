@@ -2,9 +2,13 @@ const { getReviewData } = require("../helpers/generic");
 
 const getFeed = async (req, res) => {
   try {
-    await getReviewData(req, res, {
-      userUuid: { $ne: req.user.uuid },
-    });
+    if (req.user?.uuid) {
+      await getReviewData(req, res, {
+        userUuid: { $ne: req.user.uuid },
+      });
+    } else {
+      await getReviewData(req, res);
+    }
   } catch (error) {
     res.status(500).json({ message: "Server Error", error });
   }

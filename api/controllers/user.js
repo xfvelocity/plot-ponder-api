@@ -33,7 +33,7 @@ const searchUser = async (req, res) => {
 };
 
 const userProfile = async (req, res) => {
-  const username = req.params.username || req.user.username;
+  const username = req.params.username || req.user?.username;
 
   try {
     const user = await User.findOne({
@@ -58,7 +58,7 @@ const userProfile = async (req, res) => {
 };
 
 const userReviews = async (req, res) => {
-  const uuid = req.params.uuid || req.user.uuid;
+  const uuid = req.params.uuid || req.user?.uuid;
 
   try {
     await getReviewData(

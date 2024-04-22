@@ -30,21 +30,21 @@ app.use(
 );
 
 const publicUrls = [
-  "/api/review",
   "/api/user",
   "/api/user-reviews",
   "/api/register",
   "/api/login",
+  "/api/feed",
 ];
 
 app.use(async (req, res, next) => {
   const clientToken = authenticateClientToken(req, res);
 
   if (clientToken.success) {
-    if (publicUrls.includes(req.originalUrl)) {
-      return authenticateToken(req, res, next);
-    } else {
+    if (publicUrls.some((url) => req.originalUrl.includes(url))) {
       return next();
+    } else {
+      return authenticateToken(req, res, next);
     }
   }
 });

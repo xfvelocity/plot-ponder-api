@@ -10,6 +10,8 @@ const getFeed = async (req, res) => {
       await getReviewData(req, res);
     }
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({ message: "Server Error", error });
   }
 };

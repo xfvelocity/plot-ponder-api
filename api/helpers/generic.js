@@ -43,6 +43,21 @@ const authenticateToken = (req, res, next) => {
   }
 };
 
+const getUserFromToken = (req, res, next) => {
+  const token = req.header("Authorization");
+
+  try {
+    if (token) {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = decoded;
+    }
+
+    next();
+  } catch (error) {
+    return res.status(403).json({ message: error });
+  }
+};
+
 const authenticateClientToken = (req, res, next) => {
   const token = req.header("Client-Auth");
 
@@ -139,6 +154,7 @@ const paginatedList = async (req, model, query, sortBy = {}) => {
 };
 
 module.exports = {
+  getUserFromToken,
   paginatedList,
   authenticateClientToken,
   getReviewData,

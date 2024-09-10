@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+const { getUserFromToken } = require("../helpers/generic");
+
 // ** Auth **
 const { registerUser, loginUser } = require("../controllers/auth");
 
@@ -11,7 +13,7 @@ router.post("/login", loginUser);
 // ** Feed **
 const { getFeed } = require("../controllers/feed");
 
-router.get("/feed", getFeed);
+router.get("/feed", getUserFromToken, getFeed);
 
 // ** User **
 const { userProfile, userReviews } = require("../controllers/user");

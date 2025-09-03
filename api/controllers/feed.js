@@ -1,6 +1,6 @@
-const { getReviewData } = require("../helpers/generic");
 const { Comment } = require("../models");
 const { v4: uuidv4 } = require("uuid");
+const { getReviewData, paginatedList } = require("../helpers/generic");
 
 const getFeed = async (req, res) => {
   try {
@@ -20,7 +20,9 @@ const getFeed = async (req, res) => {
 
 const getComments = async (req, res) => {
   try {
-    const comments = await Comment.find({ reviewUuid: req.params.uuid });
+    const comments = await paginatedList(req, Comment, {
+      reviewUuid: req.params.uuid,
+    });
 
     return res.status(200).send(comments);
   } catch (error) {

@@ -2,7 +2,7 @@ const bcrupt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 
-const { Review, User } = require("../models/index");
+const { Review, User, Comment } = require("../models/index");
 
 // ** Auth **
 const hashPassword = (password) => {
@@ -82,7 +82,8 @@ const getReviewData = async (
   res,
   query = {},
   getUser = true,
-  getContent = true
+  getContent = true,
+  getCommentCount = true
 ) => {
   const reviews = await paginatedList(req, Review, query, { createdAt: -1 });
 
@@ -96,6 +97,14 @@ const getReviewData = async (
           username: user.username,
           avatar: user.avatar,
         };
+      }
+
+      if (getCommentCount) {
+        const commentCount = await Comment.countDocuments({
+          reviewUuid: review.uuid,
+        });
+
+        review.commentsCount = commentCount;
       }
 
       if (getContent) {

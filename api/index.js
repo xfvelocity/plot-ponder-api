@@ -38,6 +38,7 @@ const publicUrls = [
   "/api/user-reviews",
   "/api/register",
   "/api/login",
+  "/api/content",
   "/api/feed",
   "/api/comments",
 ];

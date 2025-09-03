@@ -39,6 +39,7 @@ const publicUrls = [
   "/api/register",
   "/api/login",
   "/api/feed",
+  "/api/comments",
 ];
 
 app.use(async (req, res, next) => {

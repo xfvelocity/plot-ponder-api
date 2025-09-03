@@ -1,10 +1,12 @@
 const { getReviewData } = require("../helpers/generic");
 const { Review } = require("../models/index");
+const { v4: uuidv4 } = require("uuid");
 
 const postReview = async (req, res) => {
   try {
     const review = await Review.create({
       ...req.body,
+      uuid: uuidv4(),
       createdAt: new Date(),
       userUuid: req.user.uuid,
     });

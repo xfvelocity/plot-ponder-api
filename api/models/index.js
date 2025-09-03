@@ -21,6 +21,7 @@ const UserModel = mongoose.model("User", userSchema);
 
 // ** Review **
 const reviewSchema = new Schema({
+  uuid: String,
   contentId: Number,
   rating: Number,
   comments: String,
@@ -33,7 +34,19 @@ const reviewSchema = new Schema({
 
 const ReviewModel = mongoose.model("Review", reviewSchema);
 
+// ** Comments **
+const commentSchema = new Schema({
+  uuid: String,
+  reviewUuid: String,
+  content: String,
+  createdAt: Date,
+  userUuid: String,
+});
+
+const CommentModel = mongoose.model("Comment", commentSchema);
+
 module.exports = {
   User: UserModel,
   Review: ReviewModel,
+  Comment: CommentModel,
 };

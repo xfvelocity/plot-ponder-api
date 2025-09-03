@@ -39,4 +39,11 @@ const { searchUser } = require("../controllers/user");
 
 router.get("/search/user", searchUser);
 
+// ** Comments **
+const { getComments, postComment } = require("../controllers/feed");
+
+router.get("/comments/:uuid", getComments);
+
+router.post("/comments/:uuid", getUserFromToken, postComment);
+
 module.exports = router;
